@@ -3,7 +3,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@500;600&display=swap');
 
 :root {
-    --triangle-height:200px;
+    --triangle-height:150px;
 }
 body{
     margin: 0;
