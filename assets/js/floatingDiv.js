@@ -11,6 +11,8 @@ document.querySelectorAll('.triangle').forEach(function (triangle) {
         logoElement: logoDiv,
         color: getComputedStyle(childTriangle).backgroundColor,
         logo: null,
+        textElement: childTriangle.querySelector('.text-box'),
+        text:"",
         subImage: null,
         siblingElement: triangle.parentNode.className == "petal" ? triangle.nextElementSibling : null,
     };
@@ -47,8 +49,10 @@ function openfloatingDiv(mainTriangle, mouseX, mouseY) {
     var fileForm_2 = document.getElementById('fileInput-2');
     var upload_2 = document.getElementById("upload-2")
     var hexInput = document.getElementById('color-inbox');
+   
     fileForm.value = "";
     fileForm_2.value = "";
+    document.getElementById("text-input").value = triangleInfo.text;
     //console.log("thisone:", triangleInfo);
     if (triangleInfo.siblingElement) {
         upload_2.style.display = "block";
@@ -134,7 +138,10 @@ function openfloatingDiv(mainTriangle, mouseX, mouseY) {
             fileForm_2.style.display = "block";
         }
     }
-
+    document.getElementById('text-input').addEventListener('input',function(){
+        /* console.log(this.value,'xxxx') */
+        changeText(this);
+    })
     document.getElementById('color').addEventListener('input', function () {
         changeTriangleColor(this);
     });
@@ -164,7 +171,17 @@ function openfloatingDiv(mainTriangle, mouseX, mouseY) {
 function closefloatingDiv() {
     floatingDiv.style.display = 'none';
 }
-
+function changeText(textInput){
+    if (currentTriangle) {
+        var triangleId = currentTriangle.dataset.triangleId;
+        var triangleInfo = triangleProperties[triangleId];
+        // Update the color property of the triangle
+        triangleInfo.text = textInput.value;
+        /* console.log(triangleInfo) */
+        document.getElementById('text-input').value = textInput.value;
+        triangleInfo.textElement.innerHTML= '<p>'+document.getElementById('text-input').value+"</p> ";
+    }
+}
 function changeTriangleColor(colorInput) {
     if (currentTriangle) {
         var triangleId = currentTriangle.dataset.triangleId;
