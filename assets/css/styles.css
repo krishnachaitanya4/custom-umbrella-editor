@@ -274,10 +274,8 @@ h2{
     align-items: center;
     justify-content: center;
     line-height: calc((var(--triangle-height) * 0.12) / 2);
-    overflow: hidden;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    hyphens: auto;
+    
+    /* text-transform: lowercase; */
 }
 .color-flex{
     display: flex;
