@@ -4,6 +4,16 @@
 :root {
     --triangle-height:170px;
 }
+.switch {
+    --button-width: 2.5em;
+    --button-height: 1.5em;
+    --toggle-diameter: 1.2em;
+    --button-toggle-offset: calc((var(--button-height) - var(--toggle-diameter)) / 2);
+    --toggle-shadow-offset: 10px;
+    --toggle-wider: 2em;
+    --color-grey: #ff5b25;
+    --color-green: #4296f4;
+}
 body{
     margin: 0;
     padding: 0;
@@ -117,10 +127,32 @@ h2{
     padding: 4px;
     
 }
-.tail > img{
+
+.sub-text-box{
+    max-height: 100%;
+    max-width: 100%;
+    /* background-color: rgb(14, 176, 25); */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    display: none;
+    text-align: center;
+    margin: 0;
+    font-weight: bold;
+    font-size: calc( var(--triangle-height) * 0.04);
+    overflow: hidden;
+}
+.sub-logo-div{
+    height: 100%;
+    width: 100%;
+    /* background-color: tomato; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.sub-logo-div > img{
     max-width: 100%;
     max-height: 100%;
-    
 }
 .umbrella-1{
     position: relative;
@@ -246,10 +278,10 @@ h2{
 
 .logo-div{
     /* background-color: gray; */
-    width: calc(var(--triangle-height) / 2.58);
+    width: calc(var(--triangle-height) / 2.5);
     aspect-ratio: 1/1;
     position: absolute;
-    bottom: calc(var(--triangle-height) * 0.1);
+    bottom: calc(var(--triangle-height) * 0.03);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -259,23 +291,38 @@ h2{
     max-height: 100%;
 }
 .text-box{
-    /* background-color: red; */
+    display: none;
+    /* background-color: rgb(255, 0, 0); */
     width: calc(var(--triangle-height) / 1.5);
-    max-width: calc(var(--triangle-height) / 1.5);
-    aspect-ratio: 1/0.2 !important;
-    height: calc(var(--triangle-height) * 0.1);
+    max-width: calc(var(--triangle-height) / 2);
+    /* min-height: calc(var(--triangle-height) * 0.2); */
     position: absolute;
-    bottom: calc((var(--triangle-height) * 0.005));
+    bottom: calc((var(--triangle-height) * 0.04));
     /* bottom: 0; */
+    font-size: xx-small;
     /* font-size: calc(var(--triangle-height) * 0.04); */
-    font-size: calc((var(--triangle-height) * 0.12) / 2.5);
-    text-align: center;
-    display: flex;
+    /* font-size: calc((var(--triangle-height) * 0.12) / 2.5);
+    text-align: center; */
+    /* display: flex;
     align-items: center;
-    justify-content: center;
-    line-height: calc((var(--triangle-height) * 0.12) / 2);
-    
+    justify-content: center; */
+    /* line-height: calc((var(--triangle-height) * 0.12) / 2);
+    font-weight: bolder; */
+    text-align: center;
+    margin: 0;
+    font-weight: bold;
+    font-size: calc( var(--triangle-height) * 0.04);
     /* text-transform: lowercase; */
+}
+.text-box > h6{
+    margin: 0;
+    font-weight: bold;
+    font-size: .6rem;
+}
+.text-box > p{
+    margin: 0;
+    font-weight: 500;
+    font-size: .4rem;
 }
 .color-flex{
     display: flex;
@@ -316,8 +363,10 @@ h2{
 .text-input{
     border: 1px solid rgb(196, 196, 196);
     width: 95%;
+    max-width: 95%;
+    min-width: 95%;
     margin: 0 auto;
-    height: 30px;
+    min-height: 50px;
     border-radius: 4px;
     font-size: small;
     padding: 0 4px 0 4px;
@@ -457,3 +506,58 @@ h2{
     background-color: #e5e7eb;
   }
 
+/* Toggle button */
+.slider {
+ display: inline-block;
+ width: var(--button-width);
+ height: var(--button-height);
+ background-color: var(--color-grey);
+ border-radius: calc(var(--button-height) / 2);
+ position: relative;
+ transition: 0.3s all ease-in-out;
+}
+
+.slider::after {
+ content: "";
+ display: inline-block;
+ width: var(--toggle-diameter);
+ height: var(--toggle-diameter);
+ background-color: #fff;
+ border-radius: calc(var(--toggle-diameter) / 2);
+ position: absolute;
+ top: var(--button-toggle-offset);
+ transform: translateX(var(--button-toggle-offset));
+ box-shadow: var(--toggle-shadow-offset) 0 calc(var(--toggle-shadow-offset) * 4) rgba(0, 0, 0, 0.1);
+ transition: 0.3s all ease-in-out;
+}
+
+.switch input[type="checkbox"]:checked + .slider {
+ background-color: var(--color-green);
+}
+
+.switch input[type="checkbox"]:checked + .slider::after {
+ transform: translateX(calc(var(--button-width) - var(--toggle-diameter) - var(--button-toggle-offset)));
+ box-shadow: calc(var(--toggle-shadow-offset) * -1) 0 calc(var(--toggle-shadow-offset) * 4) rgba(0, 0, 0, 0.1);
+}
+
+.switch input[type="checkbox"] {
+ display: none;
+}
+
+.switch input[type="checkbox"]:active + .slider::after {
+ width: var(--toggle-wider);
+}
+
+.switch input[type="checkbox"]:checked:active + .slider::after {
+ transform: translateX(calc(var(--button-width) - var(--toggle-wider) - var(--button-toggle-offset)));
+}
+
+.toggle-div{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+
+}
+.toggle-div > span{
+    margin-top: -0.4em;
+}

@@ -12,9 +12,11 @@ document.querySelectorAll('.triangle').forEach(function (triangle) {
         color: getComputedStyle(childTriangle).backgroundColor,
         logo: null,
         textElement: childTriangle.querySelector('.text-box'),
-        text:"",
+        text: "",
+        subText: "",
         subImage: null,
         siblingElement: triangle.parentNode.className == "petal" ? triangle.nextElementSibling : null,
+        isText: false
     };
     triangle.addEventListener('click', function (event) {
         event.stopPropagation();
@@ -42,19 +44,21 @@ function openfloatingDiv(mainTriangle, mouseX, mouseY) {
     currentTriangle = mainTriangle;
     var triangleId = mainTriangle.dataset.triangleId;
     var triangleInfo = triangleProperties[triangleId];
-    /* console.log("current Triangle:", triangleInfo); */
     var cf_btn = document.getElementById("cf-btn");
     var cf_btn_2 = document.getElementById("cf-btn-2");
     var fileForm = document.getElementById("fileInput");
     var fileForm_2 = document.getElementById('fileInput-2');
+    var upload_1 = document.getElementById("upload-1")
     var upload_2 = document.getElementById("upload-2")
+    /* var text_input = document.getElementById("text-input-1") */
     var hexInput = document.getElementById('color-inbox');
-   
+
     fileForm.value = "";
     fileForm_2.value = "";
-    document.getElementById("text-input").value = triangleInfo.text;
-    //console.log("thisone:", triangleInfo);
+    document.getElementById("text-input-1").value = triangleInfo.text;
+    document.getElementById('textToggle').checked = triangleInfo.isText;
     if (triangleInfo.siblingElement) {
+        document.getElementById("text-input-2").value = triangleInfo.subText;
         upload_2.style.display = "block";
     } else {
         upload_2.style.display = "none";
@@ -113,34 +117,84 @@ function openfloatingDiv(mainTriangle, mouseX, mouseY) {
         //fileForm.click();
     })
 
-    //fileForm.value = triangleInfo.logo;
-    // Show or hide the logo div based on the existence of a valid logo file
-    if (triangleInfo.logo !== null && triangleInfo.logo !== '') {
-        triangleInfo.logoElement.innerHTML = '<img src="' + triangleInfo.logo + '" alt="Logo">';
-        triangleInfo.logoElement.style.display = 'flex';
-        cf_btn.style.display = "block";
-        fileForm.style.display = "none";
+    if (triangleInfo.isText) {
+        upload_1.style.display = 'none'
+        if (triangleInfo.siblingElement) {
+            upload_2.style.display = 'none'
+            document.getElementById('sub-text-body').style.display = 'block'
+        }else{
+            document.getElementById('sub-text-body').style.display = 'none'
+        }
+        document.getElementById('text-body').style.display = 'block'
+        
     } else {
-        triangleInfo.logoElement.style.display = 'none';
-        cf_btn.style.display = "none";
-        fileForm.style.display = "block";
+        upload_1.style.display = 'block'
+        if (triangleInfo.siblingElement) {
+            upload_2.style.display = 'block'
+        }
+        document.getElementById('text-body').style.display = 'none'
+        document.getElementById('sub-text-body').style.display = 'none'
     }
 
-    // Show or hide the logo div based on the existence of a valid logo file(form2)
-    if (triangleInfo.siblingElement) {
-        if (triangleInfo.subImage !== null && triangleInfo.subImage !== '') {
-            triangleInfo.siblingElement.innerHTML = '<img src="' + triangleInfo.subImage + '" alt="img">';
-            cf_btn_2.style.display = "block";
-            fileForm_2.style.display = "none";
+    //fileForm.value = triangleInfo.logo;
+    // Show or hide the logo div based on the existence of a valid logo file
+    if (!triangleInfo.isText) {
+        if (triangleInfo.logo !== null && triangleInfo.logo !== '') {
+            /* triangleInfo.logoElement.innerHTML = '<img src="' + triangleInfo.logo + '" alt="Logo">';
+            triangleInfo.logoElement.style.display = 'flex'; */
+            cf_btn.style.display = "block";
+            fileForm.style.display = "none";
         } else {
-            triangleInfo.siblingElement.innerHTML = null;
-            cf_btn_2.style.display = "none";
-            fileForm_2.style.display = "block";
+            /* triangleInfo.logoElement.style.display = 'none'; */
+            cf_btn.style.display = "none";
+            fileForm.style.display = "block";
+        }
+
+        // Show or hide the logo div based on the existence of a valid logo file(form2)
+        if (triangleInfo.siblingElement) {
+            if (triangleInfo.subImage !== null && triangleInfo.subImage !== '') {
+                /* triangleInfo.siblingElement.innerHTML = '<img src="' + triangleInfo.subImage + '" alt="img">'; */
+                cf_btn_2.style.display = "block";
+                fileForm_2.style.display = "none";
+            } else {
+                /* triangleInfo.siblingElement.innerHTML = null; */
+                cf_btn_2.style.display = "none";
+                fileForm_2.style.display = "block";
+            }
         }
     }
-    document.getElementById('text-input').addEventListener('input',function(){
-        /* console.log(this.value,'xxxx') */
+
+    document.getElementById('textToggle').addEventListener('change', function () {
+        if (this.checked) {
+            upload_1.style.display = 'none'
+            if (triangleInfo.siblingElement) {
+                upload_2.style.display = 'none'
+                document.getElementById('sub-text-body').style.display = 'block'
+            }else{
+                document.getElementById('sub-text-body').style.display = 'none'
+            }
+            document.getElementById('text-body').style.display = 'block'
+        } else {
+            upload_1.style.display = 'block'
+            
+            if (triangleInfo.siblingElement) {
+                upload_2.style.display = 'block'
+                document.getElementById('sub-text-body').style.display = 'none'
+            }else{
+                upload_2.style.display = 'none'
+                document.getElementById('sub-text-body').style.display = 'none'
+            }
+            document.getElementById('text-body').style.display = 'none'
+            document.getElementById('sub-text-body').style.display = 'none'
+            
+        }
+        changeMode(this)
+    })
+    document.getElementById('text-input-1').addEventListener('input', function () {
         changeText(this);
+    })
+    document.getElementById('text-input-2').addEventListener('input', function () {
+        changeSubText(this);
     })
     document.getElementById('color').addEventListener('input', function () {
         changeTriangleColor(this);
@@ -148,11 +202,9 @@ function openfloatingDiv(mainTriangle, mouseX, mouseY) {
 
     document.getElementById('fileInput').addEventListener('change', function () {
         changeLogo(this);
-        /* console.log("changed") */
     });
     document.getElementById('fileInput-2').addEventListener('change', function () {
         changeSubImage(this);
-        /* console.log("changed Sub Image") */
     });
 
     // Calculate the left position to ensure it stays within the viewport
@@ -167,19 +219,45 @@ function openfloatingDiv(mainTriangle, mouseX, mouseY) {
     floatingDiv.style.left = leftPos + 'px';
     floatingDiv.style.display = 'block';
 }
+/*********************** OpenDiv function end ***************************************/
+
 // Functin to handle closing of floating div with a given triangle
 function closefloatingDiv() {
     floatingDiv.style.display = 'none';
 }
-function changeText(textInput){
+function changeText(textInput) {
     if (currentTriangle) {
         var triangleId = currentTriangle.dataset.triangleId;
         var triangleInfo = triangleProperties[triangleId];
         // Update the color property of the triangle
         triangleInfo.text = textInput.value;
         /* console.log(triangleInfo) */
-        document.getElementById('text-input').value = textInput.value;
-        triangleInfo.textElement.innerHTML= '<p>'+document.getElementById('text-input').value+"</p> ";
+        document.getElementById('text-input-1').value = textInput.value;
+        triangleInfo.textElement.innerHTML = document.getElementById('text-input-1').value.replace(/\n/g, "<br>");
+    }
+}
+
+function changeSubText(textInput) {
+    if (currentTriangle) {
+        var triangleId = currentTriangle.dataset.triangleId;
+        var triangleInfo = triangleProperties[triangleId];
+        // Update the color property of the triangle
+        triangleInfo.subText = textInput.value;
+        /* console.log(triangleInfo) */
+        document.getElementById('text-input-2').value = textInput.value;
+        triangleInfo.siblingElement.querySelector('.sub-text-box').innerHTML = document.getElementById('text-input-2').value.replace(/\n/g, "<br>");
+    }
+}
+
+function changeHeading(textInput) {
+    if (currentTriangle) {
+        var triangleId = currentTriangle.dataset.triangleId;
+        var triangleInfo = triangleProperties[triangleId];
+        // Update the color property of the triangle
+        triangleInfo.heading = textInput.value;
+        /* console.log(triangleInfo) */
+        document.getElementById('text-input-2').value = textInput.value;
+        triangleInfo.headingElement.innerHTML = document.getElementById('text-input-2').value;
     }
 }
 function changeTriangleColor(colorInput) {
@@ -220,9 +298,29 @@ function changeSubImage(fileInput) {
 
         // Assuming you want to update the logo path
         triangleInfo.subImage = URL.createObjectURL(fileInput.files[0]);
-
         // Update the logo element in the triangle
-        triangleInfo.siblingElement.innerHTML = '<img src="' + triangleInfo.subImage + '" alt="img">';
+        triangleInfo.siblingElement.querySelector('.sub-logo-div').innerHTML = '<img src="' + triangleInfo.subImage + '" alt="img">';
+    }
+}
+function changeMode(toggle) {
+    var triangleId = currentTriangle.dataset.triangleId;
+    var triangleInfo = triangleProperties[triangleId];
+    triangleInfo.isText = toggle.checked;
+    if (toggle.checked) {
+        triangleInfo.textElement.style.display = 'block';
+        triangleInfo.logoElement.style.display = 'none';
+        if(triangleInfo.siblingElement){
+            triangleInfo.siblingElement.querySelector('.sub-logo-div').style.display = 'none'
+            triangleInfo.siblingElement.querySelector('.sub-text-box').style.display = 'flex'
+        }
+    } else {
+        triangleInfo.textElement.style.display = 'none';
+        triangleInfo.logoElement.style.display = 'block';
+        if(triangleInfo.siblingElement){
+            triangleInfo.siblingElement.querySelector('.sub-logo-div').style.display = 'flex'
+            triangleInfo.siblingElement.querySelector('.sub-text-box').style.display = 'none'
+        }
+
     }
 }
 
@@ -240,3 +338,4 @@ function rgbToHex(rgb) {
     }).join('');
     return hexValue;
 }
+
